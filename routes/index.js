@@ -1,9 +1,10 @@
-var express = require("express");
-var router = express.Router();
+const express = require("express");
+const router = express.Router();
+const cors = require("cors");
 
 /* GET home page. */
-router.get("/", function (req, res, next) {
-  res.json("Hello world");
+router.get("/", cors(), function (req, res, next) {
+  res.json({ text: "lol" });
 });
 
 module.exports = router;
