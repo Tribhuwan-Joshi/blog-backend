@@ -6,6 +6,7 @@ const BlogSchema = new Schema({
   title: { type: String, required: true, unique: true },
   content: { type: String, required: true },
   tags: [{ type: String }],
+  imageUrl: { type: String },
 });
 
 BlogSchema.virtual("createDate").get(function () {
@@ -17,4 +18,4 @@ BlogSchema.virtual("createDate").get(function () {
   return formattedDate;
 });
 
-module.exports = mongoose.model("Blog", PostSchema);
+module.exports = mongoose.model("Blog", BlogSchema);
