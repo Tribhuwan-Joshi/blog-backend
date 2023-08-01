@@ -8,10 +8,17 @@ const CommentController = require("../controllers/CommentController");
 router.get("/", cors(), function (req, res, next) {
   res.json({ text: "lol" });
 });
+
+// POST
+
 router.get("/blogs", BlogController.blog_list);
 router.get("/blogs/:id", BlogController.blog_details);
 router.delete("/blogs/:id", BlogController.delete_blog);
 router.post("/blogs", BlogController.create_blog);
 router.put("/blogs/:id", BlogController.update_blog);
+
+// Comments
+
+router.delete("/comments/:id", CommentController.delete_comment);
 
 module.exports = router;
