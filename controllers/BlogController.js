@@ -56,11 +56,39 @@ exports.create_blog = [
 
 exports.delete_blog = asyncHandler(async (req, res) => {
   const id = req.params.id;
+  console.log(id);
   await Blog.findByIdAndRemove(id);
-  res.status(204);
+  res.status(204).send("deleted");
 });
 
-exports.update_blog = asyncHandler(async (req, res) => {
-  const id = req.params.id;
-  res.json({ "blog id - update ": id });
-});
+exports.update_blog = [
+  (req, res, next) => {
+    if (!(req.body.tags instanceof Array)) {
+      if (typeof req.body.tags === "undefined") req.body.tags = [];
+      else req.body.tags = new Array(req.body.tags);
+    }
+    next();
+  },
+  body("title", "Title must not be empty.").trim().isLength({ min: 1 }),
+  body("content", "Content must not be empty.").trim().isLength({ min: 1 }),
+  body("tags*").escape(),
+
+  asyncHandler(async (req, res) => {
+    const errors = validationResult(req);
+
+    // create blog
+    const blog = new Blog({
+      title: req.body.title,
+      content: req.body.content,
+      tags: req.body.tags,
+      _id: req.params.id,
+    });
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.array() });
+    }
+
+    const id = req.params.id;
+    await Blog.findByIdAndUpdate(id, blog, {});
+    res.json({ "blog id - update ": id });
+  }),
+];
